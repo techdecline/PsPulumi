@@ -1,5 +1,7 @@
 name: "PulumiPipeline"
-
+defaults:
+  run:
+    working-directory: ./demo
 on:
   push:
     branches:
@@ -11,7 +13,6 @@ jobs:
   preview:
     name: Preview
     runs-on: ubuntu-latest
-    working-directory: ./demo
     steps:
       - uses: actions/checkout@v2
         name: Checkout
@@ -32,7 +33,6 @@ jobs:
     needs: preview
     name: Up
     runs-on: ubuntu-latest
-    working-directory: ./demo
     steps:
       - uses: actions/checkout@v2
         name: Checkout
