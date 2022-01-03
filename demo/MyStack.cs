@@ -22,8 +22,7 @@ class MyStack : Stack
             Kind = Kind.StorageV2,
             Tags =
             {
-                { "foo", "bar"},
-                {"dev", "null"}
+                { "foo", "bar"}
             }
         });
 
