@@ -9,7 +9,7 @@ class MyStack : Stack
         var resourceGroup = new AzureNative.Resources.ResourceGroup("resourceGroup");
 
         // Create Storage Account
-        var storageAccount = new AzureNative.Storage.StorageAccount("storageAccount", new AzureNative.Storage.StorageAccountArgs
+        var storageAccount = new AzureNative.Storage.StorageAccount("storageaccount", new AzureNative.Storage.StorageAccountArgs
         {
             EnableHttpsTrafficOnly = true,
             EnableNfsV3 = true,
