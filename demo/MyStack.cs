@@ -19,7 +19,12 @@ class MyStack : Stack
             {
                 Name = SkuName.Standard_LRS
             },
-            Kind = Kind.StorageV2
+            Kind = Kind.StorageV2,
+            Tags =
+            {
+                { "foo", "bar"},
+                {"dev", "null"}
+            }
         });
 
         // Export the primary key of the Storage Account
