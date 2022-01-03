@@ -1,7 +1,7 @@
 name: "PulumiPipeline"
 defaults:
   run:
-    working-directory: ./demo
+    working-directory: demo
 on:
   push:
     branches:
@@ -29,7 +29,6 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          working-dir: ./demo
   up:
     needs: preview
     name: Up
@@ -50,4 +49,3 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          working-dir: ./demo
