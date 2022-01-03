@@ -1,46 +1,44 @@
-using System.Threading.Tasks;
 using Pulumi;
-using Pulumi.AzureNative.Resources;
-using Pulumi.AzureNative.Storage;
-using Pulumi.AzureNative.Storage.Inputs;
+using AzureNative = Pulumi.AzureNative;
 
 class MyStack : Stack
 {
     public MyStack()
     {
         // Create an Azure Resource Group
-        var resourceGroup = new ResourceGroup("resourceGroup");
+        var resourceGroup = new AzureNative.Resources.ResourceGroup("resourceGroup");
 
-        // Create an Azure resource (Storage Account)
-        var storageAccount = new StorageAccount("sa", new StorageAccountArgs
+        // Create Storage Account
+        var storageAccount = new AzureNative.Storage.StorageAccount("storageAccount", new AzureNative.Storage.StorageAccountArgs
         {
+            EnableHttpsTrafficOnly = true,
+            EnableNfsV3 = true,
+            IsHnsEnabled = true,
+            Kind = "BlockBlobStorage",
             ResourceGroupName = resourceGroup.Name,
-            Sku = new SkuArgs
+            Sku = new AzureNative.Storage.Inputs.SkuArgs
             {
-                Name = SkuName.Standard_LRS
+                Name = "Premium_LRS",
             },
-            Kind = Kind.StorageV2,
-            Tags =
-            {
-                { "foo", "bar"}
-            }
         });
 
-        // Export the primary key of the Storage Account
-        this.PrimaryStorageKey = Output.Tuple(resourceGroup.Name, storageAccount.Name).Apply(names =>
-            Output.CreateSecret(GetStorageAccountPrimaryKey(names.Item1, names.Item2)));
-    }
-
-    [Output]
-    public Output<string> PrimaryStorageKey { get; set; }
-
-    private static async Task<string> GetStorageAccountPrimaryKey(string resourceGroupName, string accountName)
-    {
-        var accountKeys = await ListStorageAccountKeys.InvokeAsync(new ListStorageAccountKeysArgs
+        // Create Storage Container
+        var blobContainer = new AzureNative.Storage.BlobContainer("blobContainer", new AzureNative.Storage.BlobContainerArgs
         {
-            ResourceGroupName = resourceGroupName,
-            AccountName = accountName
+            AccountName = storageAccount.Name,
+            ResourceGroupName = resourceGroup.Name,
         });
-        return accountKeys.Keys[0].Value;
+
+        // Create File Asset
+        var asset = new FileAsset("../frontend/build/helloworld.html");
+
+        // Create Storage Blob from Asset
+        var storageBlob = new AzureNative.Storage.Blob("helloworld.html", new AzureNative.Storage.BlobArgs
+        {
+            AccountName = storageAccount.Name,
+            ResourceGroupName = resourceGroup.Name,
+            ContainerName = blobContainer.Name,
+            Source = asset
+        });
     }
 }
