@@ -1,0 +1,51 @@
+name: "PulumiPipeline"
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+    - '**/*.md'
+    - '**/*.gitignore'
+jobs:
+  preview:
+    name: Preview
+    runs-on: ubuntu-latest
+    working-directory: ./demo
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout
+      - uses: pulumi/action-install-pulumi-cli@v1
+        name: Install Pulumi
+      - uses: pulumi/actions@v3
+        name: Run Pulumi Preview
+        with:
+          command: preview
+          stack-name: dev
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  up:
+    needs: preview
+    name: Up
+    runs-on: ubuntu-latest
+    working-directory: ./demo
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout
+      - uses: pulumi/action-install-pulumi-cli@v1
+        name: Install Pulumi
+      - uses: pulumi/actions@v3
+        name: Run Pulumi Up
+        with:
+          command: up
+          stack-name: dev
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
