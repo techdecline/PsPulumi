@@ -1,3 +1,4 @@
+using System.IO;
 using Pulumi;
 using AzureNative = Pulumi.AzureNative;
 
@@ -28,17 +29,21 @@ class MyStack : Stack
             PublicAccess = AzureNative.Storage.PublicAccess.Blob
         });
 
-        // Create File Asset
-        var asset = new FileAsset("../frontend/build/helloworld.html");
+        var frontendBuildOutputFolder = "../frontend/build";
+        var files = Directory.GetFiles(frontendBuildOutputFolder, "*", SearchOption.AllDirectories);
 
-        // Create Storage Blob from Asset
-        var storageBlob = new AzureNative.Storage.Blob("helloworld.html", new AzureNative.Storage.BlobArgs
+        foreach (var file in files)
         {
-            AccountName = storageAccount.Name,
-            ResourceGroupName = resourceGroup.Name,
-            ContainerName = blobContainer.Name,
-            Source = asset,
-            ContentType = "text/html"
-        });
+            var fileName = Path.GetRelativePath(frontendBuildOutputFolder, file);
+            new AzureNative.Storage.Blob(fileName, new AzureNative.Storage.BlobArgs
+            {
+                AccountName = storageAccount.Name,
+                ResourceGroupName = resourceGroup.Name,
+                ContainerName = blobContainer.Name,
+                Source = new FileAsset(file),
+                BlobName = fileName,
+                ContentType = fileName.EndsWith(".css") ? "text/css; charset=utf-8" : ":"
+            });
+        }
     }
 }
