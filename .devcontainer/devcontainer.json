@@ -1,0 +1,14 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/azure-functions-dotnetcore-3.1
+{
+	"image": "docker.io/techdecline/pulumi-net",
+	// Set *default* container specific settings.json values on container create.
+	"settings": {},
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "dotnet restore",
+	"remoteUser": "vscode",
+	"mounts": [
+		"source=C:/Users/corne/.azure,target=/home/vscode/.azure,type=bind,consistency=cached",
+		"source=C:/Users/corne/.pulumi,target=/home/vscode/.pulumi,type=bind,consistency=cached"
+	]
+}
