@@ -12,21 +12,20 @@ class MyStack : Stack
         var storageAccount = new AzureNative.Storage.StorageAccount("storageaccount", new AzureNative.Storage.StorageAccountArgs
         {
             EnableHttpsTrafficOnly = true,
-            EnableNfsV3 = true,
-            IsHnsEnabled = true,
-            Kind = "BlockBlobStorage",
+            Kind = AzureNative.Storage.Kind.StorageV2,
             ResourceGroupName = resourceGroup.Name,
             Sku = new AzureNative.Storage.Inputs.SkuArgs
             {
-                Name = "Premium_LRS",
+                Name = "Standard_LRS",
             },
         });
 
         // Create Storage Container
-        var blobContainer = new AzureNative.Storage.BlobContainer("blobContainer", new AzureNative.Storage.BlobContainerArgs
+        var blobContainer = new AzureNative.Storage.BlobContainer("frontend-files", new AzureNative.Storage.BlobContainerArgs
         {
             AccountName = storageAccount.Name,
             ResourceGroupName = resourceGroup.Name,
+            PublicAccess = AzureNative.Storage.PublicAccess.Blob
         });
 
         // Create File Asset
@@ -38,7 +37,8 @@ class MyStack : Stack
             AccountName = storageAccount.Name,
             ResourceGroupName = resourceGroup.Name,
             ContainerName = blobContainer.Name,
-            Source = asset
+            Source = asset,
+            ContentType = "text/html"
         });
     }
 }
