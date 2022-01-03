@@ -35,6 +35,13 @@ class MyStack : Stack
         foreach (var file in files)
         {
             var fileName = Path.GetRelativePath(frontendBuildOutputFolder, file);
+            string contentType = (new FileInfo(fileName)).Extension switch
+            {
+                ".css" => "text/css; charset=utf-8",
+                ".html" => "text/html",
+                _ => ""
+            };
+
             new AzureNative.Storage.Blob(fileName, new AzureNative.Storage.BlobArgs
             {
                 AccountName = storageAccount.Name,
@@ -42,7 +49,7 @@ class MyStack : Stack
                 ContainerName = blobContainer.Name,
                 Source = new FileAsset(file),
                 BlobName = fileName,
-                ContentType = fileName.EndsWith(".css") ? "text/css; charset=utf-8" : ":"
+                ContentType = contentType
             });
         }
     }
