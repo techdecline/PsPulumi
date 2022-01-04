@@ -39,7 +39,7 @@ class MyStack : Stack
             BlobName = "source"
         });
 
-        var servicePlan = new AzureNative.Web.AppServicePlan("windows-plan", new AzureNative.Web.AppServicePlanArgs
+        var servicePlan = new AzureNative.Web.AppServicePlan("linux-plan", new AzureNative.Web.AppServicePlanArgs
         {
             ResourceGroupName = resourceGroup.Name,
             Sku = new AzureNative.Web.Inputs.SkuDescriptionArgs
@@ -47,7 +47,8 @@ class MyStack : Stack
                 Size = "Y1",
                 Tier = "Dynamic",
                 Name = "Y1"
-            }
+            },
+            Kind = "Linux"
         });
 
         var codeBlobUrl = SignedBlobReadUrl(functionCodeBlob, blobContainer, storageAccount, resourceGroup);
