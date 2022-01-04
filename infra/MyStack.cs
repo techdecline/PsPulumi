@@ -124,7 +124,6 @@ class MyStack : Stack
                     ContentType = contentType,
                 });
             }
-
         }
 
         var configBlob = new Pulumi.Azure.Storage.Blob("config.json", new Pulumi.Azure.Storage.BlobArgs

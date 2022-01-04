@@ -1,6 +1,6 @@
 {
   "name": "webapp",
-  "homepage": "https://storageaccountea7ce3cb.z6.web.core.windows.net/",
+  "homepage": "https://storageaccount973ac17b.blob.core.windows.net",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
