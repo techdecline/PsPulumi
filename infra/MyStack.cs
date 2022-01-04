@@ -29,7 +29,7 @@ class MyStack : Stack
             PublicAccess = AzureNative.Storage.PublicAccess.Blob
         });
 
-        var functionFileArchive = new FileArchive("../backend/handleSignup");
+        var functionFileArchive = new FileArchive("../backend");
         var functionCodeBlob = new AzureNative.Storage.Blob("function-code", new AzureNative.Storage.BlobArgs
         {
             AccountName = storageAccount.Name,
@@ -51,7 +51,6 @@ class MyStack : Stack
         });
 
         var codeBlobUrl = SignedBlobReadUrl(functionCodeBlob, blobContainer, storageAccount, resourceGroup);
-
         var webAppFunction = new AzureNative.Web.WebApp("functionApp", new AzureNative.Web.WebAppArgs
         {
             ResourceGroupName = resourceGroup.Name,
