@@ -126,14 +126,14 @@ class MyStack : Stack
             }
         }
 
-        var configBlob = new Pulumi.Azure.Storage.Blob("config.json", new Pulumi.Azure.Storage.BlobArgs
-        {
-            StorageAccountName = storageAccount.Name,
-            StorageContainerName = storageAccountStaticWebsite.ContainerName,
-            Name = "config.json",
-            SourceContent = configFileJson,
-            Type = "Block"
-        });
+        // var configBlob = new Pulumi.Azure.Storage.Blob("config.json", new Pulumi.Azure.Storage.BlobArgs
+        // {
+        //     StorageAccountName = storageAccount.Name,
+        //     StorageContainerName = storageAccountStaticWebsite.ContainerName,
+        //     Name = "config.json",
+        //     SourceContent = configFileJson,
+        //     Type = "Block"
+        // });
         // var configBlob = new AzureNative.Storage.Blob("config.json-new", new AzureNative.Storage.BlobArgs
         // {
         //     AccountName = storageAccount.Name,
