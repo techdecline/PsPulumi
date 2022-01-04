@@ -21,13 +21,23 @@ class MyStack : Stack
             },
         });
 
-        // // Create Storage Container
-        // var blobContainer = new AzureNative.Storage.BlobContainer("frontend-files", new AzureNative.Storage.BlobContainerArgs
-        // {
-        //     AccountName = storageAccount.Name,
-        //     ResourceGroupName = resourceGroup.Name,
-        //     PublicAccess = AzureNative.Storage.PublicAccess.Blob
-        // });
+        // Create Storage Container
+        var blobContainer = new AzureNative.Storage.BlobContainer("function-code", new AzureNative.Storage.BlobContainerArgs
+        {
+            AccountName = storageAccount.Name,
+            ResourceGroupName = resourceGroup.Name,
+            PublicAccess = AzureNative.Storage.PublicAccess.Blob
+        });
+
+        var functionFileArchive = new FileArchive("../backend/handleSignup");
+        new AzureNative.Storage.Blob("function-code", new AzureNative.Storage.BlobArgs
+        {
+            AccountName = storageAccount.Name,
+            ResourceGroupName = resourceGroup.Name,
+            ContainerName = blobContainer.Name,
+            Source = functionFileArchive,
+            BlobName = "source"
+        });
 
         var storageAccountStaticWebsite = new AzureNative.Storage.StorageAccountStaticWebsite("staticWebsite", new AzureNative.Storage.StorageAccountStaticWebsiteArgs
         {
