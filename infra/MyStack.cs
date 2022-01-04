@@ -29,6 +29,12 @@ class MyStack : Stack
             PublicAccess = AzureNative.Storage.PublicAccess.Blob
         });
 
+        var storageAccountStaticWebsite = new AzureNative.Storage.StorageAccountStaticWebsite("staticWebsite", new AzureNative.Storage.StorageAccountStaticWebsiteArgs
+        {
+            AccountName = storageAccount.Name,
+            ResourceGroupName = resourceGroup.Name
+        });
+
         var frontendBuildOutputFolder = "../frontend/build";
         var files = Directory.GetFiles(frontendBuildOutputFolder, "*", SearchOption.AllDirectories);
 
