@@ -133,7 +133,8 @@ class MyStack : Stack
             StorageAccountName = storageAccount.Name,
             StorageContainerName = storageAccountStaticWebsite.ContainerName,
             Name = "config.json",
-            SourceContent = configFileJson
+            SourceContent = configFileJson,
+            Type = "Block"
         });
         // var configBlob = new AzureNative.Storage.Blob("config.json-new", new AzureNative.Storage.BlobArgs
         // {
