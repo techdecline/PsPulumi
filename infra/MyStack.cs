@@ -82,8 +82,7 @@ class MyStack : Stack
                         Value = codeBlobUrl,
                     },
                 },
-            },
-            Name = "functionApp"
+            }
         });
 
         var storageAccountStaticWebsite = new AzureNative.Storage.StorageAccountStaticWebsite("staticWebsite", new AzureNative.Storage.StorageAccountStaticWebsiteArgs
