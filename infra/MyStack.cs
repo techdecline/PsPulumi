@@ -7,7 +7,6 @@ class MyStack : Stack
 {
     public MyStack()
     {
-
         // Create an Azure Resource Group
         var resourceGroup = new AzureNative.Resources.ResourceGroup("resourceGroup");
 
