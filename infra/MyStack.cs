@@ -32,7 +32,8 @@ class MyStack : Stack
         var storageAccountStaticWebsite = new AzureNative.Storage.StorageAccountStaticWebsite("staticWebsite", new AzureNative.Storage.StorageAccountStaticWebsiteArgs
         {
             AccountName = storageAccount.Name,
-            ResourceGroupName = resourceGroup.Name
+            ResourceGroupName = resourceGroup.Name,
+            IndexDocument = "index.html"
         });
 
         var frontendBuildOutputFolder = "../frontend/build";
