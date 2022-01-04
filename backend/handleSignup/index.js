@@ -1,21 +1,13 @@
-/**
- * Responds to any HTTP request.
- *
- * @param {!express:Request} req HTTP request context.
- * @param {!express:Response} res HTTP response context.
- */
-module.exports.handleSignup = (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    if (req.method === "OPTIONS") {
-        res.set("Access-Control-Allow-Methods", "GET");
-        res.set("Access-Control-Allow-Headers", "Content-Type");
-        res.set("Access-Control-Max-Age", "60");
-        return;
-    }
+module.exports = async function (context, req) {
+    context.log('JavaScript HTTP trigger function processed a request.');
 
-    res.status(200)
-        .append("Content-Type", "application/json")
-        .send({
-            message: "Request received, we'll be reaching out to you soon!"
-        });
+    const name = (req.query.name || (req.body && req.body.name));
+    const responseMessage = name
+        ? "Hello, " + name + ". This HTTP triggered function executed successfully."
+        : "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.";
+
+    context.res = {
+        // status: 200, /* Defaults to 200 */
+        body: responseMessage
+    };
 }

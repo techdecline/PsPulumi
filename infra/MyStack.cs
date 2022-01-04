@@ -1,11 +1,13 @@
 using System.IO;
 using Pulumi;
 using AzureNative = Pulumi.AzureNative;
+using Pulumi.Azure;
 
 class MyStack : Stack
 {
     public MyStack()
     {
+
         // Create an Azure Resource Group
         var resourceGroup = new AzureNative.Resources.ResourceGroup("resourceGroup");
 
@@ -48,7 +50,8 @@ class MyStack : Stack
                 Tier = "Dynamic",
                 Name = "Y1"
             },
-            Kind = "Linux"
+            Kind = "Linux",
+            Reserved = true
         });
 
         var codeBlobUrl = SignedBlobReadUrl(functionCodeBlob, blobContainer, storageAccount, resourceGroup);
@@ -85,6 +88,11 @@ class MyStack : Stack
             }
         });
 
+        var functionEndpoint = webAppFunction.DefaultHostName.Apply(url => url + "/api/handleSignup");
+        var configFileJson = functionEndpoint.Apply(url => $@"{{
+            ""backendUrl"": ""{url}""
+        }}");
+
         var storageAccountStaticWebsite = new AzureNative.Storage.StorageAccountStaticWebsite("staticWebsite", new AzureNative.Storage.StorageAccountStaticWebsiteArgs
         {
             AccountName = storageAccount.Name,
@@ -98,25 +106,45 @@ class MyStack : Stack
         foreach (var file in files)
         {
             var fileName = Path.GetRelativePath(frontendBuildOutputFolder, file);
-            string contentType = (new FileInfo(fileName)).Extension switch
+            if (fileName != "config.json")
             {
-                ".css" => "text/css; charset=utf-8",
-                ".html" => "text/html",
-                _ => ""
-            };
+                string contentType = (new FileInfo(fileName)).Extension switch
+                {
+                    ".css" => "text/css; charset=utf-8",
+                    ".html" => "text/html",
+                    _ => ""
+                };
 
-            new AzureNative.Storage.Blob(fileName, new AzureNative.Storage.BlobArgs
-            {
-                AccountName = storageAccount.Name,
-                ResourceGroupName = resourceGroup.Name,
-                ContainerName = storageAccountStaticWebsite.ContainerName,
-                Source = new FileAsset(file),
-                BlobName = fileName,
-                ContentType = contentType
-            });
+                new AzureNative.Storage.Blob(fileName, new AzureNative.Storage.BlobArgs
+                {
+                    AccountName = storageAccount.Name,
+                    ResourceGroupName = resourceGroup.Name,
+                    ContainerName = storageAccountStaticWebsite.ContainerName,
+                    Source = new FileAsset(fileName),
+                    BlobName = fileName,
+                    ContentType = contentType,
+                });
+            }
+
         }
 
-        this.Endpoint = webAppFunction.DefaultHostName;
+        var configBlob = new Pulumi.Azure.Storage.Blob("config.json", new Pulumi.Azure.Storage.BlobArgs
+        {
+            StorageAccountName = storageAccount.Name,
+            StorageContainerName = storageAccountStaticWebsite.ContainerName,
+            Name = "config.json",
+            SourceContent = configFileJson
+        });
+        // var configBlob = new AzureNative.Storage.Blob("config.json-new", new AzureNative.Storage.BlobArgs
+        // {
+        //     AccountName = storageAccount.Name,
+        //     ContainerName = storageAccountStaticWebsite.ContainerName,
+        //     ResourceGroupName = resourceGroup.Name,
+        //     BlobName = "config.json",
+        //     SourceContent = configFileJson,
+        // });
+
+        this.Endpoint = functionEndpoint;
     }
 
     [Output] public Output<string> Endpoint { get; set; }
